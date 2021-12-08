@@ -1,0 +1,13 @@
+F:\Git\InscryptionTextureConverter\InscryptionTextureConverter\bin\Debug\netcoreapp3.1\InscryptionTextureConverter.exe
+F:\Git\InscryptionTextureConverter\InscryptionTextureConverter\bin\Debug\netcoreapp3.1\InscryptionTextureConverter.deps.json
+F:\Git\InscryptionTextureConverter\InscryptionTextureConverter\bin\Debug\netcoreapp3.1\InscryptionTextureConverter.runtimeconfig.json
+F:\Git\InscryptionTextureConverter\InscryptionTextureConverter\bin\Debug\netcoreapp3.1\InscryptionTextureConverter.runtimeconfig.dev.json
+F:\Git\InscryptionTextureConverter\InscryptionTextureConverter\bin\Debug\netcoreapp3.1\InscryptionTextureConverter.dll
+F:\Git\InscryptionTextureConverter\InscryptionTextureConverter\bin\Debug\netcoreapp3.1\InscryptionTextureConverter.pdb
+F:\Git\InscryptionTextureConverter\InscryptionTextureConverter\obj\Debug\netcoreapp3.1\InscryptionTextureConverter.csprojAssemblyReference.cache
+F:\Git\InscryptionTextureConverter\InscryptionTextureConverter\obj\Debug\netcoreapp3.1\InscryptionTextureConverter.AssemblyInfoInputs.cache
+F:\Git\InscryptionTextureConverter\InscryptionTextureConverter\obj\Debug\netcoreapp3.1\InscryptionTextureConverter.AssemblyInfo.cs
+F:\Git\InscryptionTextureConverter\InscryptionTextureConverter\obj\Debug\netcoreapp3.1\InscryptionTextureConverter.csproj.CoreCompileInputs.cache
+F:\Git\InscryptionTextureConverter\InscryptionTextureConverter\obj\Debug\netcoreapp3.1\InscryptionTextureConverter.dll
+F:\Git\InscryptionTextureConverter\InscryptionTextureConverter\obj\Debug\netcoreapp3.1\InscryptionTextureConverter.pdb
+F:\Git\InscryptionTextureConverter\InscryptionTextureConverter\obj\Debug\netcoreapp3.1\InscryptionTextureConverter.genruntimeconfig.cache

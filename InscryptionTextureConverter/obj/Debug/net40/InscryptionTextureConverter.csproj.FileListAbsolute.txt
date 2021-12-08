@@ -1,0 +1,11 @@
+F:\Git\InscryptionTextureConverter\InscryptionTextureConverter\obj\Debug\net40\InscryptionTextureConverter.csprojAssemblyReference.cache
+F:\Git\InscryptionTextureConverter\InscryptionTextureConverter\obj\Debug\net40\InscryptionTextureConverter.AssemblyInfoInputs.cache
+F:\Git\InscryptionTextureConverter\InscryptionTextureConverter\obj\Debug\net40\InscryptionTextureConverter.AssemblyInfo.cs
+F:\Git\InscryptionTextureConverter\InscryptionTextureConverter\obj\Debug\net40\InscryptionTextureConverter.csproj.CoreCompileInputs.cache
+F:\Git\InscryptionTextureConverter\InscryptionTextureConverter\bin\Debug\net40\InscryptionTextureConverter.exe.config
+F:\Git\InscryptionTextureConverter\InscryptionTextureConverter\bin\Debug\net40\InscryptionTextureConverter.exe
+F:\Git\InscryptionTextureConverter\InscryptionTextureConverter\bin\Debug\net40\InscryptionTextureConverter.pdb
+F:\Git\InscryptionTextureConverter\InscryptionTextureConverter\obj\Debug\net40\InscryptionTextureConverter.exe
+F:\Git\InscryptionTextureConverter\InscryptionTextureConverter\obj\Debug\net40\InscryptionTextureConverter.pdb
+F:\Git\InscryptionTextureConverter\InscryptionTextureConverter\obj\Debug\net40\InscryptionTextureConverter.Form1.resources
+F:\Git\InscryptionTextureConverter\InscryptionTextureConverter\obj\Debug\net40\InscryptionTextureConverter.csproj.GenerateResource.cache
