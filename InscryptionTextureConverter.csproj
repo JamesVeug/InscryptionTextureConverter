@@ -7,4 +7,14 @@
         <LangVersion>default</LangVersion>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Folder Include="src" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Form1.cs">
+        <SubType>Form</SubType>
+      </Compile>
+    </ItemGroup>
+
 </Project>
