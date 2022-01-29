@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
+using InscryptionTextureConverter.Helpers;
 
 namespace InscryptionTextureConverter
 {
@@ -10,31 +11,38 @@ namespace InscryptionTextureConverter
     {
         private string lastConvertedPortrait = null;
         private string lastConvertedSigil = null;
-        private string selectedCardBackgroundPath;
-        private string seletedCardPortraitPath;
-        private string seletedCardSigilPath;
-        private string seletedOutputPath;
+        
+        private CustomText selectedCardBackgroundPath;
+        private CustomText seletedCardPortraitPath;
+        private CustomText seletedCardSigilPath;
+        private CustomText seletedOutputPath;
+        
+        private string seletedFileToConvertPath;
+        private string seletedFolderToConvertPath;
+        
         private Color selectedTransparentColor = Color.FromArgb(255, 0, 0, 0);
+        private bool initialized = false;
         
         public Form1()
         {
             InitializeComponent();
+            PlayerPrefs.Load();
+            
             Portrait.Size = Size.Empty;
             Sigil.Size = Size.Empty;
-            selectedCardBackgroundPath = Path.Combine(Directory.GetCurrentDirectory(), "Backgrounds/card_empty.png");
-            BackgroundPath.Text = selectedCardBackgroundPath; 
-            
-            seletedCardPortraitPath = Path.Combine(Directory.GetCurrentDirectory(), "Output/surfingseagul_converted.png");
-            PortraitText.Text = seletedCardPortraitPath;
-            
-            seletedCardSigilPath = Path.Combine(Directory.GetCurrentDirectory(), "Output/sigil_converted.png");
-            SigilBrowse.Text = seletedCardSigilPath;
-            
-            seletedOutputPath = Path.Combine(Directory.GetCurrentDirectory(), "Output");
-            OutputDirectory.Text = seletedOutputPath; 
+                
+            selectedCardBackgroundPath = new CustomText(BackgroundPath, "BackgroundPath", Path.Combine(Directory.GetCurrentDirectory(), "Backgrounds/card_empty.png"));
+            seletedCardPortraitPath = new CustomText(PortraitText, "PortraitPath", Path.Combine(Directory.GetCurrentDirectory(), "Output/surfingseagul_converted.png"));
+            seletedCardSigilPath = new CustomText(SigilBrowse, "SigilPath", Path.Combine(Directory.GetCurrentDirectory(), "Output/sigil_converted.png"));
+            seletedOutputPath = new CustomText(OutputDirectory, "OutputPath", Path.Combine(Directory.GetCurrentDirectory(), "Output"));
+ 
+            seletedFileToConvertPath = PlayerPrefs.GetString("SelectedFileToConvertPath", Path.Combine(Directory.GetCurrentDirectory()));
+            seletedFolderToConvertPath = PlayerPrefs.GetString("SelectedFolderToConvertPath", Path.Combine(Directory.GetCurrentDirectory()));
 
-            SetTransparentColor(selectedTransparentColor);
+            initialized = true;
             
+            SetTransparentColor(selectedTransparentColor);
+
             RefreshCard();
         }
 
@@ -58,12 +66,12 @@ namespace InscryptionTextureConverter
 
         private void RefreshCard()
         {
-            if (string.IsNullOrEmpty(selectedCardBackgroundPath) || !File.Exists(selectedCardBackgroundPath))
+            if (!initialized || string.IsNullOrEmpty(selectedCardBackgroundPath.Text) || !File.Exists(selectedCardBackgroundPath.Text))
                 return;
             
-            Bitmap background = Utils.LoadBitMap(selectedCardBackgroundPath);
-            Bitmap portrait = Converting.LoadInscryptionImage(seletedCardPortraitPath);
-            Bitmap sigil = Converting.LoadInscryptionImage(seletedCardSigilPath);
+            Bitmap background = Utils.LoadBitMap(selectedCardBackgroundPath.Text);
+            Bitmap portrait = Converting.LoadInscryptionImage(seletedCardPortraitPath.Text);
+            Bitmap sigil = Converting.LoadInscryptionImage(seletedCardSigilPath.Text);
             Bitmap combined = Converting.CombineAndResizeTwoImages(background, portrait, sigil,card.Margin.Left, card.Margin.Top);
             card.Image = combined;
             card.BackColor = Color.Transparent;
@@ -73,16 +81,16 @@ namespace InscryptionTextureConverter
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                openFileDialog.InitialDirectory = Utils.GetPath(seletedCardPortraitPath);
+                openFileDialog.InitialDirectory = Utils.GetPath(seletedCardPortraitPath.Text);
                 openFileDialog.Filter = "png files (*.png)|*.png|All files (*.*)|*.*";
                 openFileDialog.FilterIndex = 2;
-                openFileDialog.RestoreDirectory = true;
+                openFileDialog.RestoreDirectory = false;
 
+                Console.WriteLine("[BrowsePortrait_Click] Starting in " + openFileDialog.InitialDirectory);
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     //Get the path of specified file
-                    seletedCardPortraitPath = openFileDialog.FileName;
-                    BackgroundPath.Text = seletedCardPortraitPath;
+                    seletedCardPortraitPath.Text = openFileDialog.FileName;
                 }
             }
 
@@ -93,7 +101,7 @@ namespace InscryptionTextureConverter
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                openFileDialog.InitialDirectory = Utils.GetPath(selectedCardBackgroundPath);
+                openFileDialog.InitialDirectory = Utils.GetPath(selectedCardBackgroundPath.Text);
                 openFileDialog.Filter = "png files (*.png)|*.png|All files (*.*)|*.*";
                 openFileDialog.FilterIndex = 2;
                 openFileDialog.RestoreDirectory = true;
@@ -101,8 +109,7 @@ namespace InscryptionTextureConverter
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     //Get the path of specified file
-                    selectedCardBackgroundPath = openFileDialog.FileName;
-                    BackgroundPath.Text = selectedCardBackgroundPath;
+                    selectedCardBackgroundPath.Text = openFileDialog.FileName;
                 }
             }
             RefreshCard();
@@ -112,16 +119,18 @@ namespace InscryptionTextureConverter
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                openFileDialog.InitialDirectory = Utils.GetPath(seletedCardPortraitPath);
+                openFileDialog.InitialDirectory = Utils.GetPath(seletedFileToConvertPath);
                 openFileDialog.Filter = "png files (*.png)|*.png|All files (*.*)|*.*";
                 openFileDialog.FilterIndex = 2;
                 openFileDialog.RestoreDirectory = true;
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
+                    seletedFileToConvertPath = Path.GetDirectoryName(openFileDialog.FileName);
+                    PlayerPrefs.SetString("SelectedFileToConvertPath", seletedFileToConvertPath);
                     if (Convert(openFileDialog.FileName))
                     {
-                        MessageBox.Show($@"Successfully {openFileDialog.FileName}!", "Convert file!");
+                        MessageBox.Show($@"Successfully converted {openFileDialog.FileName}! Saved to {seletedOutputPath}", "Convert file!");
                     }
                 }
             }
@@ -134,7 +143,7 @@ namespace InscryptionTextureConverter
             Bitmap img = Converting.Convert(loadBitMap, keepColorCheckbox.Checked);
             
             string fileName = Path.GetFileName(path);
-            string newDirectory = seletedOutputPath; 
+            string newDirectory = seletedOutputPath.Text; 
             string newPath = Path.Combine(newDirectory, fileName);
             if (!Directory.Exists(newDirectory))
             {
@@ -146,12 +155,12 @@ namespace InscryptionTextureConverter
             if (Utils.IsSigil(img))
             {
                 lastConvertedSigil = newPath;
-                seletedCardSigilPath = lastConvertedSigil;
+                seletedCardSigilPath.Text = lastConvertedSigil;
             }
             else
             {
                 lastConvertedPortrait = newPath;
-                seletedCardPortraitPath = lastConvertedPortrait;
+                seletedCardPortraitPath.Text = lastConvertedPortrait;
             }
             RefreshCard();
 
@@ -162,13 +171,12 @@ namespace InscryptionTextureConverter
         {
             using(FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
             {
-                folderBrowserDialog.SelectedPath = Utils.GetPath(seletedOutputPath);
+                folderBrowserDialog.SelectedPath = seletedOutputPath.Directory;
                 DialogResult result = folderBrowserDialog.ShowDialog();
 
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(folderBrowserDialog.SelectedPath))
                 {
-                    seletedOutputPath = folderBrowserDialog.SelectedPath;
-                    OutputDirectory.Text = selectedCardBackgroundPath;
+                    seletedOutputPath.Text = folderBrowserDialog.SelectedPath;
                 }
             }
         }
@@ -177,14 +185,14 @@ namespace InscryptionTextureConverter
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                openFileDialog.InitialDirectory = Utils.GetPath(seletedCardSigilPath);
+                openFileDialog.InitialDirectory = seletedCardSigilPath.Directory;
                 openFileDialog.Filter = "png files (*.png)|*.png|All files (*.*)|*.*";
                 openFileDialog.FilterIndex = 2;
                 openFileDialog.RestoreDirectory = true;
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    seletedCardSigilPath = openFileDialog.FileName;
+                    seletedCardSigilPath.Text = openFileDialog.FileName;
                     RefreshCard();
                 }
             }
@@ -230,7 +238,7 @@ namespace InscryptionTextureConverter
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                openFileDialog.InitialDirectory = Utils.GetPath(seletedCardPortraitPath);
+                openFileDialog.InitialDirectory = seletedCardPortraitPath.Directory;
                 openFileDialog.Filter = "png files (*.png)|*.png|All files (*.*)|*.*";
                 openFileDialog.FilterIndex = 2;
                 openFileDialog.RestoreDirectory = true;
@@ -242,7 +250,7 @@ namespace InscryptionTextureConverter
                     Bitmap img = Converting.RemoveColor(originalImage, selectedTransparentColor);
                     
                     string fileName = Path.GetFileName(openFileDialog.FileName);
-                    string newDirectory = seletedOutputPath; 
+                    string newDirectory = seletedOutputPath.Text; 
                     string newPath = Path.Combine(newDirectory, fileName);
                     if (!Directory.Exists(newDirectory))
                     {
@@ -254,12 +262,12 @@ namespace InscryptionTextureConverter
                     if (Utils.IsSigil(img))
                     {
                         lastConvertedSigil = newPath;
-                        seletedCardSigilPath = lastConvertedSigil ?? lastConvertedSigil;
+                        seletedCardSigilPath.Text = lastConvertedSigil ?? lastConvertedSigil;
                     }
                     else
                     {
                         lastConvertedPortrait = newPath;
-                        seletedCardPortraitPath = lastConvertedPortrait ?? lastConvertedPortrait;
+                        seletedCardPortraitPath.Text = lastConvertedPortrait ?? lastConvertedPortrait;
                     }
                     
                     RefreshCard();
@@ -272,11 +280,14 @@ namespace InscryptionTextureConverter
         {
             using(FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
             {
-                folderBrowserDialog.SelectedPath = Utils.GetPath(seletedCardPortraitPath);
+                folderBrowserDialog.SelectedPath = seletedFolderToConvertPath;
                 DialogResult result = folderBrowserDialog.ShowDialog();
 
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(folderBrowserDialog.SelectedPath))
                 {
+                    seletedFolderToConvertPath = folderBrowserDialog.SelectedPath;
+                    PlayerPrefs.SetString("SelectedFolderToConvertPath", seletedFolderToConvertPath);
+                    
                     int totalConverted = ConvertAllImagesInFolder(folderBrowserDialog.SelectedPath);
                     if (totalConverted > 0)
                     {

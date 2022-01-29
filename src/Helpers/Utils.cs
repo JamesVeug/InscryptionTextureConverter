@@ -56,12 +56,16 @@ namespace InscryptionTextureConverter
         /// <returns></returns>
         public static string GetPath(string s)
         {
-            if (string.IsNullOrEmpty(s) || !Directory.Exists(s))
+            if (string.IsNullOrEmpty(s))
             {
                 return Directory.GetCurrentDirectory();
             }
-
-            return Path.GetFullPath(s);
+            
+            FileAttributes attr = File.GetAttributes(s);
+            if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+                return s;
+            
+            return Path.GetDirectoryName(s);
         }
     }
 }
