@@ -48,6 +48,11 @@ namespace InscryptionTextureConverter
             return img;
         }
 
+        public static Bitmap CloneBitmap(Bitmap img)
+        {
+            return new Bitmap(img);
+        }
+
         /// <summary>
         /// 99% sure this doesn't even work
         /// Meant to stop the dialogfolderbrowser and filebrowser from starting in the wrong folder 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 
@@ -14,6 +15,12 @@ namespace InscryptionTextureConverter
             }
 
             Bitmap image = Utils.LoadBitMap(path);
+            Bitmap blackAndWhite = ConvertToInscryptionImage(image);
+            return blackAndWhite;
+        }
+        
+        public static Bitmap ConvertToInscryptionImage(Bitmap image)
+        {
             for (int i = 0; i < image.Width; i++)
             {
                 for (int j = 0; j < image.Height; j++)
@@ -95,9 +102,20 @@ namespace InscryptionTextureConverter
             return img;
         }
         
-        public static Bitmap Convert(Bitmap img, bool keepColorCheckbox)
+        public enum ConvertType
+        {
+            None,
+            Max,
+            Min,
+            Average,
+            Median
+        }
+        
+        public static Bitmap Convert(Bitmap img, ConvertType convertType, bool keepColorCheckbox)
         {
             img.MakeTransparent();
+
+            Dictionary<int, int> record = new Dictionary<int, int>();
             for (int i = 0; i < img.Width; i++)
             {
                 for (int j = 0; j < img.Height; j++)
@@ -121,6 +139,113 @@ namespace InscryptionTextureConverter
                     }
                     Color newColor = Color.FromArgb(alpha, r, g, b);
                     img.SetPixel(i, j, newColor);
+
+                    // Record how many times used
+                    int v = 0;
+                    record.TryGetValue(alpha, out v);
+                    record[alpha] = v + 1;
+                }
+            }
+
+            if (convertType != ConvertType.None)
+            {
+                // Use values: 5%, 20%, 50%, 70%, 85%, 100%
+
+                // Print spread
+                List<int> keys = new List<int>(record.Keys);
+                keys.Sort();
+
+                Console.WriteLine("Total colours: " + keys.Count);
+                for (int i = 0; i < keys.Count; i++)
+                {
+                    Console.WriteLine($"\tColour: {keys[i]} = {record[keys[i]]}");
+                }
+
+                List<float> percents = new List<float>();
+                percents.Add(0.05f);
+                percents.Add(0.2f);
+                percents.Add(0.5f);
+                percents.Add(0.7f);
+                percents.Add(0.85f);
+                percents.Add(1f);
+                Console.WriteLine("Total Percents: " + percents.Count);
+
+                List<int> alphaBuckets = new List<int>();
+                int previousIndex = 0;
+                for (int i = 0; i < percents.Count; i++)
+                {
+                    float percent = percents[i];
+                    int maxIndex = (int)((keys.Count - 1) * percent);
+
+                    switch (convertType)
+                    {
+                        case ConvertType.Max:
+                            int highestValue = keys[maxIndex];
+                            alphaBuckets.Add(highestValue);
+                            Console.WriteLine("\t Highest Value: " + highestValue);
+                            break;
+                        case ConvertType.Min:
+                            int lowestValue = keys[previousIndex];
+                            alphaBuckets.Add(lowestValue);
+                            Console.WriteLine("\t Lowest Value Value: " + lowestValue);
+                            break;
+                        case ConvertType.Average:
+                            int sum = 0;
+                            for (int j = previousIndex; j <= maxIndex; j++)
+                            {
+                                sum += keys[j];
+                            }
+
+                            sum /= (maxIndex - previousIndex);
+                            alphaBuckets.Add(sum);
+                            Console.WriteLine("\t Sum Value: " + sum);
+                            break;
+                        case ConvertType.Median:
+                            int medianIndex = previousIndex + (maxIndex - previousIndex + 1) / 2;
+                            alphaBuckets.Add(medianIndex);
+                            Console.WriteLine("\t Median Value: " + medianIndex);
+                            break;
+                    }
+
+
+                    previousIndex = maxIndex;
+                }
+
+                for (int i = 0; i < img.Width; i++)
+                {
+                    for (int j = 0; j < img.Height; j++)
+                    {
+                        Color originalColor = img.GetPixel(i, j);
+                        if (originalColor.A == 0)
+                        {
+                            continue;
+                        }
+
+                        bool replaced = false;
+                        int a = originalColor.A;
+                        for (int k = 0; k < alphaBuckets.Count; k++)
+                        {
+                            if (a < alphaBuckets[k] || (k + 1 >= alphaBuckets.Count))
+                            {
+                                a = (int)(percents[k] * 255f);
+                                replaced = true;
+                                break;
+                            }
+                        }
+
+                        if (!replaced)
+                        {
+                            Console.WriteLine("Ignored: " + a);
+                            continue;
+                        }
+
+                        int r = originalColor.R;
+                        int g = originalColor.G;
+                        int b = originalColor.B;
+
+                        Color newColor = Color.FromArgb(a, r, g, b);
+                        img.SetPixel(i, j, newColor);
+                    }
                 }
             }
 

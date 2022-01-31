@@ -128,10 +128,14 @@ namespace InscryptionTextureConverter
                 {
                     seletedFileToConvertPath = Path.GetDirectoryName(openFileDialog.FileName);
                     PlayerPrefs.SetString("SelectedFileToConvertPath", seletedFileToConvertPath);
-                    if (Convert(openFileDialog.FileName))
+                    
+                    ConvertTextureForm otherForm = new ConvertTextureForm(openFileDialog.FileName);
+                    otherForm.Show();
+                    
+                    /*if (Convert(openFileDialog.FileName))
                     {
                         MessageBox.Show($@"Successfully converted {openFileDialog.FileName}! Saved to {seletedOutputPath}", "Convert file!");
-                    }
+                    }*/
                 }
             }
         }
@@ -140,7 +144,7 @@ namespace InscryptionTextureConverter
         {
             Console.WriteLine("Converting: " + path);
             Bitmap loadBitMap = Utils.LoadBitMap(path);
-            Bitmap img = Converting.Convert(loadBitMap, keepColorCheckbox.Checked);
+            Bitmap img = Converting.Convert(loadBitMap, Converting.ConvertType.None, keepColorCheckbox.Checked);
             
             string fileName = Path.GetFileName(path);
             string newDirectory = seletedOutputPath.Text; 
