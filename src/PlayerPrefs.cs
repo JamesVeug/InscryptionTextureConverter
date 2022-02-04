@@ -16,19 +16,15 @@ namespace InscryptionTextureConverter
         {
             if (data.TryGetValue(key, out object d))
             {
-                Console.WriteLine($"Got string '{key}' as {d}");
                 return (string)d;
-
             }
 
-            Console.WriteLine($"String '{key}' does not exist. Returning {defaultValue}");
             return defaultValue;
         }
 
         public static void SetString(string key, string value)
         {
             data[key] = value;
-            Console.WriteLine($"Saving string '{key}' as {value}");
             Save();
         }
 

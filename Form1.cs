@@ -9,6 +9,8 @@ namespace InscryptionTextureConverter
 {
     public partial class Form1 : Form
     {
+        public static string VERSION = "1.0.0";
+        
         private string lastConvertedPortrait = null;
         private string lastConvertedSigil = null;
         
@@ -26,14 +28,15 @@ namespace InscryptionTextureConverter
         public Form1()
         {
             InitializeComponent();
+            this.Text += " - v" + VERSION; // Window Header
             PlayerPrefs.Load();
             
             Portrait.Size = Size.Empty;
             Sigil.Size = Size.Empty;
                 
-            selectedCardBackgroundPath = new CustomText(BackgroundPath, "BackgroundPath", Path.Combine(Directory.GetCurrentDirectory(), "Backgrounds/card_empty.png"));
-            seletedCardPortraitPath = new CustomText(PortraitText, "PortraitPath", Path.Combine(Directory.GetCurrentDirectory(), "Output/surfingseagul_converted.png"));
-            seletedCardSigilPath = new CustomText(SigilBrowse, "SigilPath", Path.Combine(Directory.GetCurrentDirectory(), "Output/sigil_converted.png"));
+            selectedCardBackgroundPath = new CustomText(BackgroundPath, "BackgroundPath", Path.Combine(Directory.GetCurrentDirectory(), "Art/Backgrounds/card_empty.png"));
+            seletedCardPortraitPath = new CustomText(PortraitText, "PortraitPath", Path.Combine(Directory.GetCurrentDirectory(), "Art/Output/billy_bones.png"));
+            seletedCardSigilPath = new CustomText(SigilBrowse, "SigilPath", Path.Combine(Directory.GetCurrentDirectory(), "Art/Output/Blink2.png"));
             seletedOutputPath = new CustomText(OutputDirectory, "OutputPath", Path.Combine(Directory.GetCurrentDirectory(), "Output"));
  
             seletedFileToConvertPath = PlayerPrefs.GetString("SelectedFileToConvertPath", Path.Combine(Directory.GetCurrentDirectory()));
