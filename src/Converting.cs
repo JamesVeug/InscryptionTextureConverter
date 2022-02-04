@@ -155,12 +155,6 @@ namespace InscryptionTextureConverter
                 List<int> keys = new List<int>(record.Keys);
                 keys.Sort();
 
-                Console.WriteLine("Total colours: " + keys.Count);
-                for (int i = 0; i < keys.Count; i++)
-                {
-                    Console.WriteLine($"\tColour: {keys[i]} = {record[keys[i]]}");
-                }
-
                 List<float> percents = new List<float>();
                 percents.Add(0.05f);
                 percents.Add(0.2f);
@@ -168,7 +162,6 @@ namespace InscryptionTextureConverter
                 percents.Add(0.7f);
                 percents.Add(0.85f);
                 percents.Add(1f);
-                Console.WriteLine("Total Percents: " + percents.Count);
 
                 List<int> alphaBuckets = new List<int>();
                 int previousIndex = 0;
@@ -182,12 +175,10 @@ namespace InscryptionTextureConverter
                         case ConvertType.Max:
                             int highestValue = keys[maxIndex];
                             alphaBuckets.Add(highestValue);
-                            Console.WriteLine("\t Highest Value: " + highestValue);
                             break;
                         case ConvertType.Min:
                             int lowestValue = keys[previousIndex];
                             alphaBuckets.Add(lowestValue);
-                            Console.WriteLine("\t Lowest Value Value: " + lowestValue);
                             break;
                         case ConvertType.Average:
                             int sum = 0;
@@ -198,12 +189,10 @@ namespace InscryptionTextureConverter
 
                             sum /= (maxIndex - previousIndex);
                             alphaBuckets.Add(sum);
-                            Console.WriteLine("\t Sum Value: " + sum);
                             break;
                         case ConvertType.Median:
                             int medianIndex = previousIndex + (maxIndex - previousIndex + 1) / 2;
                             alphaBuckets.Add(medianIndex);
-                            Console.WriteLine("\t Median Value: " + medianIndex);
                             break;
                     }
 
@@ -235,7 +224,6 @@ namespace InscryptionTextureConverter
 
                         if (!replaced)
                         {
-                            Console.WriteLine("Ignored: " + a);
                             continue;
                         }
 

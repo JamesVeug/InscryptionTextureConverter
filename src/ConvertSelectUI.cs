@@ -6,12 +6,15 @@ namespace InscryptionTextureConverter
 {
     public class ConvertSelectUI
     {
+        public Bitmap DisplayedPortrait => displayedBitmap;
+        
         private PictureBox Portrait;
         private PictureBox Background;
         private Action<ConvertSelectUI> callback;
         private Converting.ConvertType convertType;
 
         private Bitmap convertedBitmap;
+        private Bitmap displayedBitmap;
         
         public ConvertSelectUI(PictureBox Background, PictureBox Portrait, Converting.ConvertType convertType, Action<ConvertSelectUI> callback)
         {
@@ -30,11 +33,10 @@ namespace InscryptionTextureConverter
         public void Show(Bitmap bitmap)
         {
             convertedBitmap = Converting.Convert(bitmap, convertType, false);
-            Portrait.Image = Converting.ConvertToInscryptionImage(convertedBitmap);
             
+            displayedBitmap = Converting.ConvertToInscryptionImage(convertedBitmap);
+            Portrait.Image = displayedBitmap;
         }
-        
-        
 
         public void OnPressed()
         {

@@ -16,10 +16,13 @@ namespace InscryptionTextureConverter
 
         private string filePath;
         private Bitmap raw;
-        
-        public ConvertTextureForm(string filePath)
+        private Action<Bitmap, string> onSelectedCallback;
+
+        public ConvertTextureForm(string filePath, Action<Bitmap, string> OnSelectedCallback)
         {
             InitializeComponent();
+            this.onSelectedCallback = OnSelectedCallback;
+            
             original = new ConvertSelectUI(originalBackground, originalPortrait, Converting.ConvertType.None, OnUISelected);
             min = new ConvertSelectUI(minBackground, minPortrait, Converting.ConvertType.Min, OnUISelected);
             max = new ConvertSelectUI(maxBackground, maxPortrait, Converting.ConvertType.Max, OnUISelected);
@@ -43,7 +46,8 @@ namespace InscryptionTextureConverter
 
         private void OnUISelected(ConvertSelectUI ui)
         {
-            
+            onSelectedCallback.Invoke(ui.DisplayedPortrait, filePath);
+            Close();
         }
 
         private void templateImage_Click(object sender, EventArgs e)

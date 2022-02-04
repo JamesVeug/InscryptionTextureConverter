@@ -51,8 +51,9 @@
             this.TransparentColorButton = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.RemoveBackgroundButton = new System.Windows.Forms.Button();
-            this.convertFolderButton = new System.Windows.Forms.Button();
             this.keepColorCheckbox = new System.Windows.Forms.CheckBox();
+            this.OutputOpen = new System.Windows.Forms.Button();
+            this.AllowOverwrite = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.Portrait)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.card)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Sigil)).BeginInit();
@@ -105,9 +106,9 @@
             // ConvertFileButton
             // 
             this.ConvertFileButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ConvertFileButton.Location = new System.Drawing.Point(510, 96);
+            this.ConvertFileButton.Location = new System.Drawing.Point(429, 96);
             this.ConvertFileButton.Name = "ConvertFileButton";
-            this.ConvertFileButton.Size = new System.Drawing.Size(278, 43);
+            this.ConvertFileButton.Size = new System.Drawing.Size(359, 43);
             this.ConvertFileButton.TabIndex = 9;
             this.ConvertFileButton.Text = "Convert File";
             this.ConvertFileButton.UseVisualStyleBackColor = true;
@@ -167,12 +168,12 @@
             // 
             this.OutputDirectory.Location = new System.Drawing.Point(510, 14);
             this.OutputDirectory.Name = "OutputDirectory";
-            this.OutputDirectory.Size = new System.Drawing.Size(244, 20);
+            this.OutputDirectory.Size = new System.Drawing.Size(213, 20);
             this.OutputDirectory.TabIndex = 15;
             // 
             // OutputBrowse
             // 
-            this.OutputBrowse.Location = new System.Drawing.Point(760, 12);
+            this.OutputBrowse.Location = new System.Drawing.Point(729, 12);
             this.OutputBrowse.Name = "OutputBrowse";
             this.OutputBrowse.Size = new System.Drawing.Size(28, 23);
             this.OutputBrowse.TabIndex = 14;
@@ -261,17 +262,6 @@
             this.RemoveBackgroundButton.UseVisualStyleBackColor = true;
             this.RemoveBackgroundButton.Click += new System.EventHandler(this.RemoveBackgroundButton_Click);
             // 
-            // convertFolderButton
-            // 
-            this.convertFolderButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.convertFolderButton.Location = new System.Drawing.Point(429, 96);
-            this.convertFolderButton.Name = "convertFolderButton";
-            this.convertFolderButton.Size = new System.Drawing.Size(75, 43);
-            this.convertFolderButton.TabIndex = 27;
-            this.convertFolderButton.Text = "Convert Folder";
-            this.convertFolderButton.UseVisualStyleBackColor = true;
-            this.convertFolderButton.Click += new System.EventHandler(this.convertFolderButton_Click);
-            // 
             // keepColorCheckbox
             // 
             this.keepColorCheckbox.Location = new System.Drawing.Point(429, 67);
@@ -281,13 +271,34 @@
             this.keepColorCheckbox.Text = "Keep Color";
             this.keepColorCheckbox.UseVisualStyleBackColor = true;
             // 
+            // OutputOpen
+            // 
+            this.OutputOpen.Image = ((System.Drawing.Image)(resources.GetObject("OutputOpen.Image")));
+            this.OutputOpen.Location = new System.Drawing.Point(763, 11);
+            this.OutputOpen.Name = "OutputOpen";
+            this.OutputOpen.Size = new System.Drawing.Size(28, 23);
+            this.OutputOpen.TabIndex = 29;
+            this.OutputOpen.UseVisualStyleBackColor = true;
+            this.OutputOpen.Click += new System.EventHandler(this.OutputOpen_Click);
+            // 
+            // AllowOverwrite
+            // 
+            this.AllowOverwrite.Location = new System.Drawing.Point(510, 67);
+            this.AllowOverwrite.Name = "AllowOverwrite";
+            this.AllowOverwrite.Size = new System.Drawing.Size(104, 24);
+            this.AllowOverwrite.TabIndex = 30;
+            this.AllowOverwrite.Text = "Allow Overwrite";
+            this.AllowOverwrite.UseVisualStyleBackColor = true;
+            this.AllowOverwrite.CheckedChanged += new System.EventHandler(this.AllowOverwrite_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.AllowOverwrite);
+            this.Controls.Add(this.OutputOpen);
             this.Controls.Add(this.keepColorCheckbox);
-            this.Controls.Add(this.convertFolderButton);
             this.Controls.Add(this.RemoveBackgroundButton);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.TransparentColorButton);
@@ -318,9 +329,13 @@
             this.PerformLayout();
         }
 
-        private System.Windows.Forms.CheckBox keepColorCheckbox;
+        private System.Windows.Forms.CheckBox AllowOverwrite;
 
-        private System.Windows.Forms.Button convertFolderButton;
+        private System.Windows.Forms.CheckBox OverriteExistingFile;
+
+        private System.Windows.Forms.Button OutputOpen;
+
+        private System.Windows.Forms.CheckBox keepColorCheckbox;
 
         private System.Windows.Forms.Button RemoveBackgroundButton;
 

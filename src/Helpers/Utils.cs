@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -65,12 +66,35 @@ namespace InscryptionTextureConverter
             {
                 return Directory.GetCurrentDirectory();
             }
+
+            if (!File.Exists(s) && !Directory.Exists(s))
+            {
+                return Directory.GetCurrentDirectory();
+            }
             
             FileAttributes attr = File.GetAttributes(s);
             if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
                 return s;
             
             return Path.GetDirectoryName(s);
+        }
+        
+        public static void OpenFolder(string folderPath)
+        {
+            if (Directory.Exists(folderPath))
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo
+                {
+                    Arguments = folderPath,
+                    FileName = "explorer.exe"
+                };
+
+                Process.Start(startInfo);
+            }
+            else
+            {
+                MessageBox.Show(string.Format("{0} Directory does not exist!", folderPath));
+            }
         }
     }
 }

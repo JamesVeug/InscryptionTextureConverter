@@ -129,7 +129,7 @@ namespace InscryptionTextureConverter
                     seletedFileToConvertPath = Path.GetDirectoryName(openFileDialog.FileName);
                     PlayerPrefs.SetString("SelectedFileToConvertPath", seletedFileToConvertPath);
                     
-                    ConvertTextureForm otherForm = new ConvertTextureForm(openFileDialog.FileName);
+                    ConvertTextureForm otherForm = new ConvertTextureForm(openFileDialog.FileName, ExportBitmap);
                     otherForm.Show();
                     
                     /*if (Convert(openFileDialog.FileName))
@@ -138,6 +138,31 @@ namespace InscryptionTextureConverter
                     }*/
                 }
             }
+        }
+
+        private void ExportBitmap(Bitmap bitmap, string originalPath)
+        {
+            string fileName = Path.GetFileName(originalPath);
+            string newDirectory = seletedOutputPath.Text; 
+            if (!Directory.Exists(newDirectory))
+            {
+                Directory.CreateDirectory(newDirectory);
+            }
+
+            string newPath = Path.Combine(newDirectory, fileName);
+            if (File.Exists(newPath) && !AllowOverwrite.Checked)
+            {
+                MessageBox.Show($@"File at {originalPath} already exists! Cannot overwrite file!", "Convert file", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            
+            Utils.SaveToFile(bitmap, newPath);
+            
+            lastConvertedPortrait = newPath;
+            seletedCardPortraitPath.Text = lastConvertedPortrait;
+            RefreshCard();
+            
+            MessageBox.Show($@"Successfully converted {originalPath}! Saved to {newPath}", "Convert file");
         }
 
         private bool Convert(string path)
@@ -299,6 +324,15 @@ namespace InscryptionTextureConverter
                     }
                 }
             }
+        }
+
+        private void OutputOpen_Click(object sender, EventArgs e)
+        {
+            Utils.OpenFolder(seletedOutputPath.Directory);
+        }
+
+        private void AllowOverwrite_CheckedChanged(object sender, EventArgs e)
+        {
         }
     }
 }
