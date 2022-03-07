@@ -18,10 +18,17 @@ namespace InscryptionTextureConverter
         private readonly int ImageWidth;
         private readonly int ImageHeight;
 
+        private Bitmap CachedBitmap;
+
         public ConvertedImage(int width, int height)
         {
             this.ImageWidth = width;
             this.ImageHeight = height;
+        }
+
+        public ConvertedImage(Bitmap CachedBitmap)
+        {
+            this.CachedBitmap = CachedBitmap;
         }
 
         public void AddPixel(int x, int y, Color newColor)
@@ -48,6 +55,13 @@ namespace InscryptionTextureConverter
 
         public Bitmap ToBitmap()
         {
+            if (CachedBitmap != null)
+            {
+                Bitmap clone = Utils.CloneBitmap(CachedBitmap);
+                clone.MakeTransparent();
+                return clone;
+            }
+            
             Bitmap bitmap = new Bitmap(ImageWidth, ImageHeight);
             bitmap.MakeTransparent();
 
@@ -63,9 +77,20 @@ namespace InscryptionTextureConverter
 
             return bitmap;
         }
+
+        public void Finalize()
+        {
+            Colors.Sort((a, b) => a.A - b.A);
+            ColorsMappings.Sort((a, b) =>
+            {
+                int aIndex = Colors.IndexOf(a.Color);
+                int bIndex = Colors.IndexOf(b.Color);
+                return aIndex - bIndex;
+            });
+        }
     }
     
-    public class Converting
+    public static class Converting
     {
         public static Bitmap LoadInscryptionImage(string path)
         {
@@ -165,6 +190,7 @@ namespace InscryptionTextureConverter
         public enum ConvertType
         {
             None,
+            Simple,
             Max,
             Min,
             Average,
@@ -173,8 +199,12 @@ namespace InscryptionTextureConverter
         
         public static ConvertedImage Convert(Bitmap img, ConvertType convertType, bool keepColorCheckbox)
         {
-            img.MakeTransparent();
-
+            if (convertType == ConvertType.Simple)
+            {
+                return Convert(img, keepColorCheckbox);
+            }
+            
+            
             Dictionary<int, int> record = new Dictionary<int, int>();
             for (int i = 0; i < img.Width; i++)
             {
@@ -197,19 +227,25 @@ namespace InscryptionTextureConverter
                         g = 0;
                         b = 0;
                     }
+                        
                     Color newColor = Color.FromArgb(alpha, r, g, b);
                     img.SetPixel(i, j, newColor);
-
+                        
                     // Record how many times used
                     int v = 0;
                     record.TryGetValue(alpha, out v);
                     record[alpha] = v + 1;
                 }
             }
-
-            ConvertedImage convertedImage = new ConvertedImage(img.Width, img.Height);
-            if (convertType != ConvertType.None)
+            
+            if (convertType == ConvertType.None)
             {
+                ConvertedImage convertedImage = new ConvertedImage(img);
+                return convertedImage;
+            }
+            else
+            {
+                ConvertedImage convertedImage = new ConvertedImage(img.Width, img.Height);
                 // Use values: 5%, 20%, 50%, 70%, 85%, 100%
 
                 // Print spread
@@ -217,6 +253,7 @@ namespace InscryptionTextureConverter
                 keys.Sort();
 
                 List<float> percents = new List<float>();
+                percents.Add(0.00f);
                 percents.Add(0.05f);
                 percents.Add(0.2f);
                 percents.Add(0.5f);
@@ -248,7 +285,12 @@ namespace InscryptionTextureConverter
                                 sum += keys[j];
                             }
 
-                            sum /= (maxIndex - previousIndex);
+                            int avg = (maxIndex - previousIndex);
+                            if (avg != 0)
+                            {
+                                sum /= avg;
+                            }
+
                             colors.Add(sum);
                             break;
                         case ConvertType.Median:
@@ -296,16 +338,66 @@ namespace InscryptionTextureConverter
                         convertedImage.AddPixel(i, j, newColor);
                     }
                 }
+
+                return convertedImage;
             }
-            else
+        }
+
+        public static int GetNearestValue(int value, List<int> list)
+        {
+            int bestDifference = int.MaxValue;
+            int bestValue = int.MaxValue;
+
+            for (int i = 0; i < list.Count; i++)
             {
-                for (int i = 0; i < img.Width; i++)
+                int diff = Math.Abs(list[i] - value);
+                if (diff < bestDifference)
                 {
-                    for (int j = 0; j < img.Height; j++)
+                    bestDifference = diff;
+                    bestValue = list[i];
+                }
+            }
+
+            return bestValue;
+        }
+        
+        private static ConvertedImage Convert(Bitmap img, bool keepColorCheckbox)
+        {
+            List<int> alphaRatios = new List<int>();
+            alphaRatios.Add((int)(0.00f * 255));
+            alphaRatios.Add((int)(0.05f * 255));
+            alphaRatios.Add((int)(0.20f * 255));
+            alphaRatios.Add((int)(0.50f * 255));
+            alphaRatios.Add((int)(0.70f * 255));
+            alphaRatios.Add((int)(0.85f * 255));
+            alphaRatios.Add((int)(1.00f * 255));
+
+            ConvertedImage convertedImage = new ConvertedImage(img.Width, img.Height);
+            for (int i = 0; i < img.Width; i++)
+            {
+                for (int j = 0; j < img.Height; j++)
+                {
+                    Color originalColor = img.GetPixel(i, j);
+                    if (originalColor.A == 0)
                     {
-                        Color originalColor = img.GetPixel(i, j);
-                        convertedImage.AddPixel(i, j, originalColor);
+                        continue;
                     }
+
+                    int r = originalColor.R;
+                    int g = originalColor.G;
+                    int b = originalColor.B;
+
+                    int alpha = 255 -  (r + g + b) / 3;
+                    if (!keepColorCheckbox)
+                    {
+                        r = 0;
+                        g = 0;
+                        b = 0;
+                    }
+
+                    int roundedAlpha = GetNearestValue(alpha, alphaRatios);
+                    Color newColor = Color.FromArgb(roundedAlpha, r, g, b);
+                    convertedImage.AddPixel(i, j, newColor);
                 }
             }
 

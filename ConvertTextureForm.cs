@@ -9,6 +9,7 @@ namespace InscryptionTextureConverter
     public partial class ConvertTextureForm : Form
     {
         private ConvertSelectUI original;
+        private ConvertSelectUI simple;
         private ConvertSelectUI min;
         private ConvertSelectUI max;
         private ConvertSelectUI average;
@@ -34,14 +35,15 @@ namespace InscryptionTextureConverter
                 OnUISelected);
 
             Point offset = new Point(originalBackground.Size.Width, 0);
-            min = original.Clone(Converting.ConvertType.Min, offset, this);
-            max = original.Clone(Converting.ConvertType.Max, offset.Scale(2), this);
-            average = original.Clone(Converting.ConvertType.Average, offset.Scale(3), this);
-            median = original.Clone(Converting.ConvertType.Median, offset.Scale(4), this);
+            simple = original.Clone(Converting.ConvertType.Simple, offset, this);
+            min = original.Clone(Converting.ConvertType.Min, offset.Scale(2), this);
+            max = original.Clone(Converting.ConvertType.Max, offset.Scale(3), this);
+            average = original.Clone(Converting.ConvertType.Average, offset.Scale(4), this);
+            median = original.Clone(Converting.ConvertType.Median, offset.Scale(5), this);
 
             allUIList = new List<ConvertSelectUI>()
             {
-                original,min,max,average,median
+                original,simple,min,max,average,median
             };
             
             this.filePath = filePath;

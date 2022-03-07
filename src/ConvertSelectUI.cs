@@ -52,32 +52,35 @@ namespace InscryptionTextureConverter
         public void Show(Bitmap bitmap)
         {
             convertedBitmap = Converting.Convert(bitmap, convertType, false);
+            convertedBitmap.Finalize();
+            
             displayedBitmap = Converting.ConvertToInscryptionImage(convertedBitmap.ToBitmap());
             Portrait.Image = displayedBitmap;
 
-            Form form = Background.FindForm();
-            List<Color> Colors = convertedBitmap.Colors;
-            for (int i = 0; i < Colors.Count; i++)
+            if (convertType != Converting.ConvertType.None)
             {
-                int height = TrackBarClone.Bounds.Height * i;
-                Point barOffset = new Point(0, height);
-                TrackBar clonedTrackbar = Utils.Clone(TrackBarClone, barOffset);
-                clonedTrackbar.Minimum = 0;
-                clonedTrackbar.Maximum = Colors.Count - 1;
-                clonedTrackbar.Value = 0;
-                clonedTrackbar.Refresh();
+                Form form = Background.FindForm();
+                List<Color> Colors = convertedBitmap.Colors;
+                for (int i = 0; i < Colors.Count; i++)
+                {
+                    int height = TrackBarClone.Bounds.Height * i;
+                    Point barOffset = new Point(0, height);
+                    TrackBar clonedTrackbar = Utils.Clone(TrackBarClone, barOffset);
+                    clonedTrackbar.Minimum = 0;
+                    clonedTrackbar.Maximum = Colors.Count - 1;
+                    clonedTrackbar.Value = 0;
 
-                int colorIndex = i;
-                clonedTrackbar.ValueChanged += (a, b) => { TrackBarChanged(clonedTrackbar, colorIndex); };
-                form.Controls.Add(clonedTrackbar);
-                TrackBars.Add(clonedTrackbar);
-                
-                
-                Panel clonedColor = Utils.Clone(TrackBarImagePanel, barOffset);
-                Color color = Colors[i];
-                clonedColor.BackColor = Color.FromArgb(color.A, color.R, color.G, color.B);
-                form.Controls.Add(clonedColor);
-                TrackBarsPanels.Add(clonedColor);
+                    int colorIndex = i;
+                    clonedTrackbar.ValueChanged += (a, b) => { TrackBarChanged(clonedTrackbar, colorIndex); };
+                    form.Controls.Add(clonedTrackbar);
+                    TrackBars.Add(clonedTrackbar);
+
+                    Panel clonedColor = Utils.Clone(TrackBarImagePanel, barOffset);
+                    Color color = Colors[i];
+                    clonedColor.BackColor = Color.FromArgb(color.A, color.R, color.G, color.B);
+                    form.Controls.Add(clonedColor);
+                    TrackBarsPanels.Add(clonedColor);
+                }
             }
         }
 
@@ -91,8 +94,7 @@ namespace InscryptionTextureConverter
             for (int i = 0; i < Colors.Count; i++)
             {
                 Panel clonedColor = TrackBarsPanels[i];
-                Color color = Colors[i];
-                clonedColor.BackColor = Color.FromArgb(color.A, color.R, color.G, color.B);
+                clonedColor.BackColor = convertedBitmap.ColorsMappings[i].Color;
             }
         }
 
