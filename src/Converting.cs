@@ -5,6 +5,66 @@ using System.IO;
 
 namespace InscryptionTextureConverter
 {
+    public class ImageColorMap
+    {
+        public Color Color;
+        public List<Point> Positions = new List<Point>();
+    }
+    
+    public class ConvertedImage
+    {
+        public List<ImageColorMap> ColorsMappings = new List<ImageColorMap>();
+        public List<Color> Colors = new List<Color>();
+        private readonly int ImageWidth;
+        private readonly int ImageHeight;
+
+        public ConvertedImage(int width, int height)
+        {
+            this.ImageWidth = width;
+            this.ImageHeight = height;
+        }
+
+        public void AddPixel(int x, int y, Color newColor)
+        {
+            Point point = new Point(x,y);
+            for (int i = 0; i < ColorsMappings.Count; i++)
+            {
+                int a = ColorsMappings[i].Color.ToArgb();
+                int b = newColor.ToArgb();
+                if (a == b)
+                {
+                    ColorsMappings[i].Positions.Add(point);
+                    return;
+                }
+            }
+
+            ImageColorMap map = new ImageColorMap();
+            map.Color = newColor;
+            map.Positions.Add(point);
+            ColorsMappings.Add(map);
+
+            Colors.Add(newColor);
+        }
+
+        public Bitmap ToBitmap()
+        {
+            Bitmap bitmap = new Bitmap(ImageWidth, ImageHeight);
+            bitmap.MakeTransparent();
+
+            for (int i = 0; i < ColorsMappings.Count; i++)
+            {
+                ImageColorMap map = ColorsMappings[i];
+                for (int j = 0; j < map.Positions.Count; j++)
+                {
+                    Point point = map.Positions[j];
+                    bitmap.SetPixel(point.X, point.Y, map.Color);
+                }
+            }
+
+            return bitmap;
+        }
+    }
+    
     public class Converting
     {
         public static Bitmap LoadInscryptionImage(string path)
@@ -111,7 +171,7 @@ namespace InscryptionTextureConverter
             Median
         }
         
-        public static Bitmap Convert(Bitmap img, ConvertType convertType, bool keepColorCheckbox)
+        public static ConvertedImage Convert(Bitmap img, ConvertType convertType, bool keepColorCheckbox)
         {
             img.MakeTransparent();
 
@@ -147,6 +207,7 @@ namespace InscryptionTextureConverter
                 }
             }
 
+            ConvertedImage convertedImage = new ConvertedImage(img.Width, img.Height);
             if (convertType != ConvertType.None)
             {
                 // Use values: 5%, 20%, 50%, 70%, 85%, 100%
@@ -163,7 +224,7 @@ namespace InscryptionTextureConverter
                 percents.Add(0.85f);
                 percents.Add(1f);
 
-                List<int> alphaBuckets = new List<int>();
+                List<int> colors = new List<int>();
                 int previousIndex = 0;
                 for (int i = 0; i < percents.Count; i++)
                 {
@@ -174,11 +235,11 @@ namespace InscryptionTextureConverter
                     {
                         case ConvertType.Max:
                             int highestValue = keys[maxIndex];
-                            alphaBuckets.Add(highestValue);
+                            colors.Add(highestValue);
                             break;
                         case ConvertType.Min:
                             int lowestValue = keys[previousIndex];
-                            alphaBuckets.Add(lowestValue);
+                            colors.Add(lowestValue);
                             break;
                         case ConvertType.Average:
                             int sum = 0;
@@ -188,11 +249,11 @@ namespace InscryptionTextureConverter
                             }
 
                             sum /= (maxIndex - previousIndex);
-                            alphaBuckets.Add(sum);
+                            colors.Add(sum);
                             break;
                         case ConvertType.Median:
                             int medianIndex = previousIndex + (maxIndex - previousIndex + 1) / 2;
-                            alphaBuckets.Add(medianIndex);
+                            colors.Add(medianIndex);
                             break;
                     }
 
@@ -212,11 +273,11 @@ namespace InscryptionTextureConverter
 
                         bool replaced = false;
                         int a = originalColor.A;
-                        for (int k = 0; k < alphaBuckets.Count; k++)
+                        for (int k = 0; k < colors.Count; k++)
                         {
-                            if (a < alphaBuckets[k] || (k + 1 >= alphaBuckets.Count))
+                            if (a < colors[k] || (k + 1 >= colors.Count))
                             {
-                                a = (int)(percents[k] * 255f);
+                                a = (int)(colors[k]);
                                 replaced = true;
                                 break;
                             }
@@ -232,12 +293,23 @@ namespace InscryptionTextureConverter
                         int b = originalColor.B;
 
                         Color newColor = Color.FromArgb(a, r, g, b);
-                        img.SetPixel(i, j, newColor);
+                        convertedImage.AddPixel(i, j, newColor);
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < img.Width; i++)
+                {
+                    for (int j = 0; j < img.Height; j++)
+                    {
+                        Color originalColor = img.GetPixel(i, j);
+                        convertedImage.AddPixel(i, j, originalColor);
                     }
                 }
             }
 
-            return img;
+            return convertedImage;
         }
     }
 }

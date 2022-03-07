@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using InscryptionTextureConverter.Helpers;
 
 namespace InscryptionTextureConverter
 {
@@ -23,11 +24,20 @@ namespace InscryptionTextureConverter
             InitializeComponent();
             this.onSelectedCallback = OnSelectedCallback;
             
-            original = new ConvertSelectUI(originalBackground, originalPortrait, Converting.ConvertType.None, OnUISelected);
-            min = new ConvertSelectUI(minBackground, minPortrait, Converting.ConvertType.Min, OnUISelected);
-            max = new ConvertSelectUI(maxBackground, maxPortrait, Converting.ConvertType.Max, OnUISelected);
-            average = new ConvertSelectUI(averageBackground, averagePortrait, Converting.ConvertType.Average, OnUISelected);
-            median = new ConvertSelectUI(medianBackground, medianPortrait, Converting.ConvertType.Median, OnUISelected);
+            original = new ConvertSelectUI(Converting.ConvertType.None, 
+                originalBackground, 
+                originalPortrait, 
+                originalSelect, 
+                originalInvertButton, 
+                trackBar1,
+                TrackPanelColor,
+                OnUISelected);
+
+            Point offset = new Point(originalBackground.Size.Width, 0);
+            min = original.Clone(Converting.ConvertType.Min, offset, this);
+            max = original.Clone(Converting.ConvertType.Max, offset.Scale(2), this);
+            average = original.Clone(Converting.ConvertType.Average, offset.Scale(3), this);
+            median = original.Clone(Converting.ConvertType.Median, offset.Scale(4), this);
 
             allUIList = new List<ConvertSelectUI>()
             {
@@ -42,6 +52,9 @@ namespace InscryptionTextureConverter
             {
                 allUIList[i].Show(Utils.CloneBitmap(this.raw));
             }
+
+            TextBox textBox = new TextBox();
+            Controls.Add(textBox);
         }
 
         private void OnUISelected(ConvertSelectUI ui)
@@ -88,6 +101,11 @@ namespace InscryptionTextureConverter
         private void originalPortrait_Click(object sender, EventArgs e)
         {
             
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

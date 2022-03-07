@@ -49,7 +49,7 @@ namespace InscryptionTextureConverter
             RefreshCard();
         }
 
-        private int ConvertAllImagesInFolder(string path)
+        /*private int ConvertAllImagesInFolder(string path)
         {
             int totalConverted = 0;
             foreach (string filePath in Directory.EnumerateFiles(path))
@@ -65,7 +65,7 @@ namespace InscryptionTextureConverter
                 }
             }
             return totalConverted;
-        }
+        }*/
 
         private void RefreshCard()
         {
@@ -134,11 +134,6 @@ namespace InscryptionTextureConverter
                     
                     ConvertTextureForm otherForm = new ConvertTextureForm(openFileDialog.FileName, ExportBitmap);
                     otherForm.Show();
-                    
-                    /*if (Convert(openFileDialog.FileName))
-                    {
-                        MessageBox.Show($@"Successfully converted {openFileDialog.FileName}! Saved to {seletedOutputPath}", "Convert file!");
-                    }*/
                 }
             }
         }
@@ -168,7 +163,7 @@ namespace InscryptionTextureConverter
             MessageBox.Show($@"Successfully converted {originalPath}! Saved to {newPath}", "Convert file");
         }
 
-        private bool Convert(string path)
+        /*private bool Convert(string path)
         {
             Console.WriteLine("Converting: " + path);
             Bitmap loadBitMap = Utils.LoadBitMap(path);
@@ -197,7 +192,7 @@ namespace InscryptionTextureConverter
             RefreshCard();
 
             return true;
-        }
+        }*/
 
         private void OutputBrowse_Click(object sender, EventArgs e)
         {
@@ -308,7 +303,7 @@ namespace InscryptionTextureConverter
             }
         }
 
-        private void convertFolderButton_Click(object sender, EventArgs e)
+        /*private void convertFolderButton_Click(object sender, EventArgs e)
         {
             using(FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
             {
@@ -327,7 +322,7 @@ namespace InscryptionTextureConverter
                     }
                 }
             }
-        }
+        }*/
 
         private void OutputOpen_Click(object sender, EventArgs e)
         {

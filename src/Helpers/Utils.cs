@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace InscryptionTextureConverter
@@ -95,6 +96,63 @@ namespace InscryptionTextureConverter
             {
                 MessageBox.Show(string.Format("{0} Directory does not exist!", folderPath));
             }
+        }
+
+        public static T Clone<T>(T controlToClone, Point offset) where T : Control
+        {
+            T instance = Activator.CreateInstance<T>();
+            instance.Size = new Size(controlToClone.Size.Width, controlToClone.Size.Height);
+            instance.BackColor = controlToClone.BackColor;
+            instance.ForeColor = controlToClone.ForeColor;
+            instance.Text = controlToClone.Text;
+
+            if (typeof(T) == typeof(PictureBox))
+            {
+                PictureBox template = (PictureBox)(object)controlToClone;
+                PictureBox clone = (PictureBox)(object)instance;
+                clone.Image = template.Image;
+                clone.SizeMode = template.SizeMode;
+            }
+            else if (typeof(T) == typeof(Button))
+            {
+                Button template = (Button)(object)controlToClone;
+                Button clone = (Button)(object)instance;
+                clone.Image = template.Image;
+                clone.Text = template.Text;
+                clone.TextAlign = template.TextAlign;
+            }
+            else if (typeof(T) == typeof(Panel))
+            {
+                Panel template = (Panel)(object)controlToClone;
+                Panel clone = (Panel)(object)instance;
+                clone.AutoSize = template.AutoSize;
+            }
+            else if (typeof(T) == typeof(TrackBar))
+            {
+                TrackBar template = (TrackBar)(object)controlToClone;
+                TrackBar clone = (TrackBar)(object)instance;
+                clone.Minimum = template.Minimum;
+                clone.Maximum = template.Maximum;
+                clone.Value = template.Value;
+            }
+
+            Point newLocation = new Point(controlToClone.Left + offset.X, controlToClone.Top + offset.Y);
+            instance.Location = newLocation;
+            /*foreach (PropertyInfo propInfo in controlProperties)
+            {
+                if (propInfo.CanWrite)
+                {
+                    if(propInfo.Name != "WindowTarget")
+                        propInfo.SetValue(instance, propInfo.GetValue(controlToClone, null), null);
+                }
+            }*/
+
+            return instance;
+        }
+
+        public static Point Add(Point a, Point b)
+        {
+            return new Point(a.X + b.X, a.Y + b.Y);
         }
     }
 }
