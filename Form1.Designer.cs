@@ -51,7 +51,6 @@
             this.TransparentColorButton = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.RemoveBackgroundButton = new System.Windows.Forms.Button();
-            this.keepColorCheckbox = new System.Windows.Forms.CheckBox();
             this.OutputOpen = new System.Windows.Forms.Button();
             this.AllowOverwrite = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.Portrait)).BeginInit();
@@ -262,15 +261,6 @@
             this.RemoveBackgroundButton.UseVisualStyleBackColor = true;
             this.RemoveBackgroundButton.Click += new System.EventHandler(this.RemoveBackgroundButton_Click);
             // 
-            // keepColorCheckbox
-            // 
-            this.keepColorCheckbox.Location = new System.Drawing.Point(429, 67);
-            this.keepColorCheckbox.Name = "keepColorCheckbox";
-            this.keepColorCheckbox.Size = new System.Drawing.Size(104, 24);
-            this.keepColorCheckbox.TabIndex = 28;
-            this.keepColorCheckbox.Text = "Keep Color";
-            this.keepColorCheckbox.UseVisualStyleBackColor = true;
-            // 
             // OutputOpen
             // 
             this.OutputOpen.Image = ((System.Drawing.Image)(resources.GetObject("OutputOpen.Image")));
@@ -283,7 +273,7 @@
             // 
             // AllowOverwrite
             // 
-            this.AllowOverwrite.Location = new System.Drawing.Point(510, 67);
+            this.AllowOverwrite.Location = new System.Drawing.Point(429, 67);
             this.AllowOverwrite.Name = "AllowOverwrite";
             this.AllowOverwrite.Size = new System.Drawing.Size(104, 24);
             this.AllowOverwrite.TabIndex = 30;
@@ -295,10 +285,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.AllowOverwrite);
             this.Controls.Add(this.OutputOpen);
-            this.Controls.Add(this.keepColorCheckbox);
             this.Controls.Add(this.RemoveBackgroundButton);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.TransparentColorButton);
@@ -320,8 +310,8 @@
             this.Controls.Add(this.BrowseBackground);
             this.Controls.Add(this.Portrait);
             this.Controls.Add(this.card);
+            this.Location = new System.Drawing.Point(15, 15);
             this.Name = "Form1";
-            this.Text = "Inscryption Texture converter";
             ((System.ComponentModel.ISupportInitialize)(this.Portrait)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.card)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Sigil)).EndInit();

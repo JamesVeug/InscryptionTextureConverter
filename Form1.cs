@@ -114,7 +114,7 @@ namespace InscryptionTextureConverter
                     seletedFileToConvertPath = Path.GetDirectoryName(openFileDialog.FileName);
                     PlayerPrefs.SetString("SelectedFileToConvertPath", seletedFileToConvertPath);
                     
-                    ConvertTextureForm otherForm = new ConvertTextureForm(openFileDialog.FileName, ExportBitmap, keepColorCheckbox.Checked);
+                    ConvertTextureForm otherForm = new ConvertTextureForm(openFileDialog.FileName, ExportBitmap, false);
                     otherForm.Show();
                 }
             }
