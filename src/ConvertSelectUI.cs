@@ -12,7 +12,6 @@ namespace InscryptionTextureConverter
         private PictureBox Portrait;
         private PictureBox Background;
         private Button SelectButton;
-        private Button InvertButton;
         private TrackBar TrackBarClone;
         private Panel TrackBarImagePanel;
         private Action<ConvertSelectUI> callback;
@@ -28,14 +27,14 @@ namespace InscryptionTextureConverter
             PictureBox Background, 
             PictureBox Portrait, 
             Button SelectButton, 
-            Button InvertButton, 
             TrackBar TrackBarTemplate,
             Panel TrackBarImagePanel,
             Action<ConvertSelectUI> callback)
         {
             this.Background = Background;
             this.SelectButton = SelectButton;
-            this.InvertButton = InvertButton;
+            SelectButton.Click += OnPressed;
+            
             this.TrackBarClone = Utils.Clone(TrackBarTemplate, Point.Empty);
             this.TrackBarImagePanel = Utils.Clone(TrackBarImagePanel, Point.Empty);
             
@@ -49,9 +48,9 @@ namespace InscryptionTextureConverter
             this.convertType = convertType;
         }
 
-        public void Show(Bitmap bitmap)
+        public void Show(Bitmap bitmap, bool keepColor)
         {
-            convertedBitmap = Converting.Convert(bitmap, convertType, false);
+            convertedBitmap = Converting.Convert(bitmap, convertType, keepColor);
             convertedBitmap.Finalize();
             
             displayedBitmap = Converting.ConvertToInscryptionImage(convertedBitmap.ToBitmap());
@@ -98,7 +97,7 @@ namespace InscryptionTextureConverter
             }
         }
 
-        public void OnPressed()
+        public void OnPressed(object sender, EventArgs eventArgs)
         {
             this.callback(this);
         }
@@ -108,7 +107,7 @@ namespace InscryptionTextureConverter
             var background = Utils.Clone(this.Background, Point.Empty);
             var portrait = Utils.Clone(this.Portrait, Point.Empty);
             var selectButton = Utils.Clone(this.SelectButton, Point.Empty);
-            var TrackBarClone = Utils.Clone(this.TrackBarClone, offset);
+            var trackBarClone = Utils.Clone(this.TrackBarClone, offset);
             var PanelClone = Utils.Clone(TrackBarImagePanel, offset);
             
             background.Name += "_" + type;
@@ -131,8 +130,7 @@ namespace InscryptionTextureConverter
                 background,
                 portrait,
                 selectButton,
-                null,
-                TrackBarClone,
+                trackBarClone,
                 PanelClone,
                 this.callback
                 );

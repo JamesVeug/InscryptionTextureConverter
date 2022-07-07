@@ -16,20 +16,21 @@ namespace InscryptionTextureConverter
         private ConvertSelectUI median;
         private List<ConvertSelectUI> allUIList;
 
+        private bool keepColor;
         private string filePath;
         private Bitmap raw;
         private Action<Bitmap, string> onSelectedCallback;
 
-        public ConvertTextureForm(string filePath, Action<Bitmap, string> OnSelectedCallback)
+        public ConvertTextureForm(string filePath, Action<Bitmap, string> OnSelectedCallback, bool keepColor)
         {
             InitializeComponent();
             this.onSelectedCallback = OnSelectedCallback;
+            this.keepColor = keepColor;
             
             original = new ConvertSelectUI(Converting.ConvertType.None, 
                 originalBackground, 
                 originalPortrait, 
                 originalSelect, 
-                originalInvertButton, 
                 trackBar1,
                 TrackPanelColor,
                 OnUISelected);
@@ -52,7 +53,7 @@ namespace InscryptionTextureConverter
 
             for (int i = 0; i < allUIList.Count; i++)
             {
-                allUIList[i].Show(Utils.CloneBitmap(this.raw));
+                allUIList[i].Show(Utils.CloneBitmap(this.raw), keepColor);
             }
 
             TextBox textBox = new TextBox();
@@ -75,39 +76,9 @@ namespace InscryptionTextureConverter
             
         }
 
-        private void originalSelectButton_Click(object sender, EventArgs e)
-        {
-            original.OnPressed();
-        }
-
-        private void minSelectButton_Click(object sender, EventArgs e)
-        {
-            min.OnPressed();
-        }
-
-        private void maxSelectButton_Click(object sender, EventArgs e)
-        {
-            max.OnPressed();
-        }
-
-        private void averageSelectButton_Click(object sender, EventArgs e)
-        {
-            average.OnPressed();
-        }
-
-        private void medianSelectButton_Click(object sender, EventArgs e)
-        {
-            median.OnPressed();
-        }
-
         private void originalPortrait_Click(object sender, EventArgs e)
         {
             
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

@@ -49,24 +49,6 @@ namespace InscryptionTextureConverter
             RefreshCard();
         }
 
-        /*private int ConvertAllImagesInFolder(string path)
-        {
-            int totalConverted = 0;
-            foreach (string filePath in Directory.EnumerateFiles(path))
-            {
-                if (!filePath.ToLower().EndsWith(".png") && !filePath.ToLower().EndsWith(".jpg"))
-                {
-                    continue;
-                }
-
-                if(Convert(filePath))
-                {
-                    totalConverted++;
-                }
-            }
-            return totalConverted;
-        }*/
-
         private void RefreshCard()
         {
             if (!initialized || string.IsNullOrEmpty(selectedCardBackgroundPath.Text) || !File.Exists(selectedCardBackgroundPath.Text))
@@ -132,7 +114,7 @@ namespace InscryptionTextureConverter
                     seletedFileToConvertPath = Path.GetDirectoryName(openFileDialog.FileName);
                     PlayerPrefs.SetString("SelectedFileToConvertPath", seletedFileToConvertPath);
                     
-                    ConvertTextureForm otherForm = new ConvertTextureForm(openFileDialog.FileName, ExportBitmap);
+                    ConvertTextureForm otherForm = new ConvertTextureForm(openFileDialog.FileName, ExportBitmap, keepColorCheckbox.Checked);
                     otherForm.Show();
                 }
             }

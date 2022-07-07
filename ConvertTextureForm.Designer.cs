@@ -95,7 +95,6 @@ namespace InscryptionTextureConverter
             this.originalSelect.TabIndex = 17;
             this.originalSelect.Text = "Select";
             this.originalSelect.UseVisualStyleBackColor = true;
-            this.originalSelect.Click += new System.EventHandler(this.button1_Click);
             // 
             // TrackPanelColor
             // 
