@@ -67,7 +67,7 @@ namespace InscryptionTextureConverter
                     TrackBar clonedTrackbar = Utils.Clone(TrackBarClone, barOffset);
                     clonedTrackbar.Minimum = 0;
                     clonedTrackbar.Maximum = Colors.Count - 1;
-                    clonedTrackbar.Value = 0;
+                    clonedTrackbar.Value = i;
 
                     int colorIndex = i;
                     clonedTrackbar.ValueChanged += (a, b) => { TrackBarChanged(clonedTrackbar, colorIndex); };
