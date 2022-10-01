@@ -9,8 +9,6 @@ namespace InscryptionTextureConverter
 {
     public partial class Form1 : Form
     {
-        public static string VERSION = "1.0.0";
-        
         private string lastConvertedPortrait = null;
         private string lastConvertedSigil = null;
         
@@ -28,7 +26,7 @@ namespace InscryptionTextureConverter
         public Form1()
         {
             InitializeComponent();
-            this.Text += " - v" + VERSION; // Window Header
+            this.Text += " - v" + Constants.VERSION; // Window Header
             PlayerPrefs.Load();
             
             Portrait.Size = Size.Empty;

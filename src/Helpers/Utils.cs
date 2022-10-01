@@ -3,17 +3,51 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Reflection;
 using System.Windows.Forms;
 
 namespace InscryptionTextureConverter
 {
     public class Constants
     {
+        public const string VERSION = "1.0.1";
+        
         public const float PortraitWidth = 114;
         public const float PortraitHeight = 94;
         public const float SigilWidth = 49;
         public const float SigilHeight = 49;
+        
+        public static float[] AlphaRatios = new float[]
+        {
+            0.00f,
+            0.05f,
+            0.2f,
+            0.5f,
+            0.7f,
+            0.85f,
+            1f,
+        };
+        
+        public static int[] Alpha255Ratios = new int[]
+        {
+            (int)(0.00f * 255f),
+            (int)(0.05f * 255f),
+            (int)(0.2f * 255f),
+            (int)(0.5f * 255f),
+            (int)(0.7f * 255f),
+            (int)(0.85f * 255f),
+            (int)(1f * 255f),
+        };
+        
+        public static Color[] Colors = new Color[]
+        {
+            Color.FromArgb(Alpha255Ratios[0], 0, 0, 0),
+            Color.FromArgb(Alpha255Ratios[1], 0, 0, 0),
+            Color.FromArgb(Alpha255Ratios[2], 0, 0, 0),
+            Color.FromArgb(Alpha255Ratios[3], 0, 0, 0),
+            Color.FromArgb(Alpha255Ratios[4], 0, 0, 0),
+            Color.FromArgb(Alpha255Ratios[5], 0, 0, 0),
+            Color.FromArgb(Alpha255Ratios[6], 0, 0, 0),
+        };
     }
 
     public class Utils

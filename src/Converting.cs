@@ -252,18 +252,11 @@ namespace InscryptionTextureConverter
                 List<int> keys = new List<int>(record.Keys);
                 keys.Sort();
 
-                List<float> percents = new List<float>();
-                percents.Add(0.00f);
-                percents.Add(0.05f);
-                percents.Add(0.2f);
-                percents.Add(0.5f);
-                percents.Add(0.7f);
-                percents.Add(0.85f);
-                percents.Add(1f);
+                float[] percents = Constants.AlphaRatios;
 
                 List<int> colors = new List<int>();
                 int previousIndex = 0;
-                for (int i = 0; i < percents.Count; i++)
+                for (int i = 0; i < percents.Length; i++)
                 {
                     float percent = percents[i];
                     int maxIndex = (int)((keys.Count - 1) * percent);
@@ -344,12 +337,12 @@ namespace InscryptionTextureConverter
             }
         }
 
-        public static int GetNearestValue(int value, List<int> list)
+        public static int GetNearestValue(int value, int[] list)
         {
             int bestDifference = int.MaxValue;
             int bestValue = int.MaxValue;
 
-            for (int i = 0; i < list.Count; i++)
+            for (int i = 0; i < list.Length; i++)
             {
                 int diff = Math.Abs(list[i] - value);
                 if (diff < bestDifference)
@@ -364,15 +357,6 @@ namespace InscryptionTextureConverter
         
         private static ConvertedImage Convert(Bitmap img, bool keepColorCheckbox)
         {
-            List<int> alphaRatios = new List<int>();
-            alphaRatios.Add((int)(0.00f * 255));
-            alphaRatios.Add((int)(0.05f * 255));
-            alphaRatios.Add((int)(0.20f * 255));
-            alphaRatios.Add((int)(0.50f * 255));
-            alphaRatios.Add((int)(0.70f * 255));
-            alphaRatios.Add((int)(0.85f * 255));
-            alphaRatios.Add((int)(1.00f * 255));
-
             ConvertedImage convertedImage = new ConvertedImage(img.Width, img.Height);
             for (int i = 0; i < img.Width; i++)
             {
@@ -396,7 +380,7 @@ namespace InscryptionTextureConverter
                         b = 0;
                     }
 
-                    int roundedAlpha = GetNearestValue(alpha, alphaRatios);
+                    int roundedAlpha = GetNearestValue(alpha, Constants.Alpha255Ratios);
                     Color newColor = Color.FromArgb(roundedAlpha, r, g, b);
                     convertedImage.AddPixel(i, j, newColor);
                 }
