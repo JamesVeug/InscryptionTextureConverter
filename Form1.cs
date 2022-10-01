@@ -26,7 +26,7 @@ namespace InscryptionTextureConverter
         public Form1()
         {
             InitializeComponent();
-            this.Text += " - v" + Constants.VERSION; // Window Header
+            this.Text = "Inscryption Texture Converter - v" + Constants.VERSION; // Window Header
             PlayerPrefs.Load();
             
             Portrait.Size = Size.Empty;
