@@ -295,7 +295,8 @@ namespace InscryptionTextureConverter
                             break;
                         case ConvertType.Median:
                             int medianIndex = previousIndex + (maxIndex - previousIndex + 1) / 2;
-                            colors.Add(medianIndex);
+                            int median = keys[medianIndex];
+                            colors.Add(median);
                             break;
                     }
 
