@@ -46,7 +46,7 @@ namespace InscryptionTextureConverter
             {
                 original,simple,min,max,average,median
             };
-            
+           
             this.filePath = filePath;
             this.raw = Utils.LoadBitMap(filePath);
             templateImage.Image = raw;
@@ -55,9 +55,6 @@ namespace InscryptionTextureConverter
             {
                 allUIList[i].Show(Utils.CloneBitmap(this.raw), keepColor);
             }
-
-            TextBox textBox = new TextBox();
-            Controls.Add(textBox);
         }
 
         private void OnUISelected(ConvertSelectUI ui)
