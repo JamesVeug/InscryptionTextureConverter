@@ -278,13 +278,14 @@ namespace InscryptionTextureConverter
                                 sum += keys[j];
                             }
 
-                            int avg = (maxIndex - previousIndex);
+                            int value = sum;
+                            int avg = (maxIndex - previousIndex) + 1;
                             if (avg != 0)
                             {
-                                sum /= avg;
+                                value /= avg;
                             }
 
-                            colors.Add(sum);
+                            colors.Add(value);
                             break;
                         case ConvertType.Median:
                             int medianIndex = previousIndex + (maxIndex - previousIndex + 1) / 2;
