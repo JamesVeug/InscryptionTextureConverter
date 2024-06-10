@@ -33,6 +33,7 @@ namespace InscryptionTextureConverter
                 originalSelect, 
                 trackBar1,
                 TrackPanelColor,
+                label1,
                 OnUISelected);
 
             Point offset = new Point(originalBackground.Size.Width, 0);
@@ -74,6 +75,11 @@ namespace InscryptionTextureConverter
         }
 
         private void originalPortrait_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void label1_Click(object sender, EventArgs e)
         {
             
         }

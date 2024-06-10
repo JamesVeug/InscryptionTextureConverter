@@ -169,9 +169,18 @@ namespace InscryptionTextureConverter
                 clone.Maximum = template.Maximum;
                 clone.Value = template.Value;
             }
+            else if (typeof(T) == typeof(Label))
+            {
+                Label template = (Label)(object)controlToClone;
+                Label clone = (Label)(object)instance;
+                clone.TextAlign = template.TextAlign;
+                clone.Font = template.Font;
+            }
 
             Point newLocation = new Point(controlToClone.Left + offset.X, controlToClone.Top + offset.Y);
             instance.Location = newLocation;
+            
+            
             /*foreach (PropertyInfo propInfo in controlProperties)
             {
                 if (propInfo.CanWrite)

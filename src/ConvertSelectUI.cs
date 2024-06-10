@@ -14,6 +14,7 @@ namespace InscryptionTextureConverter
         private Button SelectButton;
         private TrackBar TrackBarClone;
         private Panel TrackBarImagePanel;
+        private Label TrackBarLabel;
         private Action<ConvertSelectUI> callback;
         private Converting.ConvertType convertType;
 
@@ -29,14 +30,17 @@ namespace InscryptionTextureConverter
             Button SelectButton, 
             TrackBar TrackBarTemplate,
             Panel TrackBarImagePanel,
+            Label TrackBarLabel,
             Action<ConvertSelectUI> callback)
         {
             this.Background = Background;
             this.SelectButton = SelectButton;
             SelectButton.Click += OnPressed;
             
-            this.TrackBarClone = Utils.Clone(TrackBarTemplate, Point.Empty);
-            this.TrackBarImagePanel = Utils.Clone(TrackBarImagePanel, Point.Empty);
+            this.TrackBarClone = TrackBarTemplate;
+            this.TrackBarImagePanel = TrackBarImagePanel;
+            this.TrackBarLabel = TrackBarLabel;
+            this.TrackBarLabel.Text = convertType.ToString();
             
             Point location = new Point(Portrait.Location.X -  Background.Location.X, Portrait.Location.Y -  Background.Location.Y);
             this.Portrait = Portrait;
@@ -50,6 +54,8 @@ namespace InscryptionTextureConverter
 
         public void Show(Bitmap bitmap, bool keepColor)
         {
+            TrackBarLabel.Text = convertType.ToString();
+            
             convertedBitmap = Converting.Convert(bitmap, convertType, keepColor);
             convertedBitmap.Finalize();
             
@@ -109,6 +115,8 @@ namespace InscryptionTextureConverter
             var selectButton = Utils.Clone(this.SelectButton, Point.Empty);
             var trackBarClone = Utils.Clone(this.TrackBarClone, offset);
             var PanelClone = Utils.Clone(TrackBarImagePanel, offset);
+            var TrackBarLabelClone = Utils.Clone(TrackBarLabel, offset);
+            form.Controls.Add(TrackBarLabelClone);
             
             background.Name += "_" + type;
             background.Left = Background.Left + offset.X;
@@ -132,6 +140,7 @@ namespace InscryptionTextureConverter
                 selectButton,
                 trackBarClone,
                 PanelClone,
+                TrackBarLabelClone,
                 this.callback
                 );
             
