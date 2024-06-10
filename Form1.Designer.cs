@@ -312,6 +312,7 @@
             this.Controls.Add(this.card);
             this.Location = new System.Drawing.Point(15, 15);
             this.Name = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.Portrait)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.card)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Sigil)).EndInit();

@@ -9,7 +9,7 @@ namespace InscryptionTextureConverter
 {
     public class Constants
     {
-        public const string VERSION = "1.0.1"; 
+        public const string VERSION = "1.0.2"; 
         
         public const float PortraitWidth = 114;
         public const float PortraitHeight = 94;
